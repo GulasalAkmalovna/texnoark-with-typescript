@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Button, Modal, Form, Input } from "antd";
 import { subCategory } from "@service";
 import { openNotification } from "@utils";
-import { ModalProps } from "@types";
+import { PropsModals } from "@types";
 
 interface values {
    name: string;
@@ -15,7 +15,7 @@ const Index = ({
    getData,
    update,
    parentId,
-}: ModalProps) => {
+}: PropsModals) => {
    const [form] = Form.useForm();
 
    useEffect(() => {
