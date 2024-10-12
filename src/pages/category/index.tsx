@@ -152,7 +152,7 @@ const Index = () => {
                onClick={openModal}
                className="rounded-lg px-4 py-5"
             >
-               <span className="ml-2">Add Category</span>
+               <span className="ml-2">Add New Category</span>
             </Button>
          </div>
          <GlobalTable

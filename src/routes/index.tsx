@@ -5,6 +5,7 @@ import {
    RouterProvider,
 } from "react-router-dom";
 import App from "../App";
+import { Suspense } from "react";
 import {
    SignIn,
    SignUp,
@@ -39,7 +40,9 @@ const Index = () => {
       )
    );
 
-   return <RouterProvider router={router} />;
+   return <Suspense fallback={<div>Loading... <div className="loader w-20 h-10 bg-red-600"></div></div>}>
+      <RouterProvider router={router} />
+   </Suspense>
 };
 
 export default Index;
