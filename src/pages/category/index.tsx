@@ -1,25 +1,27 @@
+import { AiOutlineArrowRight } from "react-icons/ai";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { category } from "@service";
+import { Category } from "@modals";
+import { GlobalTable, Popconfirm, GlobalSearch } from "@components";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Tooltip } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { GlobalTable, Popconfirm, GlobalSearch } from "@components";
-import { category } from "@service";
-import { Category } from "@modals";
 import { Record, Update, Pagination } from "@types";
 const initialValue = { id: 0, name: "", categoryId: 0, category_id: 0 };
 
 const Index = () => {
+   const [total, setTotal] = useState();
    const [open, setOpen] = useState(false);
    const [data, setData] = useState([]);
-   const [total, setTotal] = useState();
+   const { search } = useLocation();
+   const navigate = useNavigate();
    const [update, setUpdate] = useState<Update>(initialValue);
+
    const [params, setParams] = useState({
       page: 1,
       limit: 5,
       search: "",
    });
-   const { search } = useLocation();
-   const navigate = useNavigate();
 
    useEffect(() => {
       const params = new URLSearchParams(search);
@@ -33,7 +35,8 @@ const Index = () => {
          limit: limit,
       }));
    }, [search]);
-   const handleClose = () => {
+
+   const closeModal = () => {
       setOpen(false);
       setUpdate(initialValue);
    };
@@ -53,7 +56,7 @@ const Index = () => {
       getData();
    }, [params]);
 
-   const handleDelete = async (id: number) => {
+   const deleteCategory = async (id: number) => {
       try {
          const response = await category.delete(id);
          if (response.status === 200) {
@@ -89,9 +92,9 @@ const Index = () => {
 
    const columns = [
       {
-         title: "No",
-         dataIndex: "no",
-         key: "no",
+         title: "T/r",
+         dataIndex: "tr",
+         key: "tr",
          render: (_: string, __: Record, index: number) =>
             (params.page - 1) * params.limit + index + 1,
       },
@@ -115,7 +118,7 @@ const Index = () => {
                   description="Are you sure to delete this category?"
                   okText="Yes"
                   cancelText="No"
-                  onConfirm={() => handleDelete(record.id)}
+                  onConfirm={() => deleteCategory(record.id)}
                >
                   <Tooltip title="Delete" color="#e99803">
                      <Button>
@@ -128,6 +131,7 @@ const Index = () => {
                      <EditOutlined />
                   </Button>
                </Tooltip>
+               <Button onClick={() => navigate(`/admin-layout/category/${record.id}`)} ><AiOutlineArrowRight /></Button>
             </div>
          ),
       },
@@ -135,26 +139,16 @@ const Index = () => {
 
    return (
       <>
-         <Category
-            open={open}
-            handleClose={handleClose}
-            update={update}
-            getData={getData}
-         />
+         <Category open={open} handleClose={closeModal} update={update} getData={getData} />
          <div className="flex justify-between mb-10">
-            <GlobalSearch
-               placeholder="Search category..."
-               searchParamKey="search"
-               onSearch={handleSearch}
-            />
-            <Button
-               type="primary"
-               onClick={openModal}
-               className="rounded-lg px-4 py-5"
-            >
+            <GlobalSearch placeholder="Search category..." searchParamKey="search" onSearch={handleSearch} />
+
+            <Button type="primary" onClick={openModal} className="rounded-lg px-4 py-5">
                <span className="ml-2">Add New Category</span>
             </Button>
+
          </div>
+
          <GlobalTable
             columns={columns}
             dataSource={data}

@@ -56,3 +56,11 @@ export interface BrandCategory {
    delete: (id: number) => Promise<any>;
    getBrand: (id: number) => Promise<any>;
 }
+export interface Products {
+   create: (data: string) => Promise<any>;
+   get: (params: Params) => Promise<any>;
+   getOne: (id: number) => Promise<any>;
+   update: (id: number, data: string) => Promise<any>;
+   delete: (id: number) => Promise<any>;
+}
+

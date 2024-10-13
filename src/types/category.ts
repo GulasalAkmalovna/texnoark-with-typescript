@@ -1,4 +1,19 @@
-///////////////////////// Modal ////////////////////////
+// ======================  GlobalCategory Table =====================
+export interface Record extends Update {
+   createdAt: string;
+   image?: any;
+   lastUpdateAt: string;
+}
+
+export interface Pagination {
+   current: number;
+   pageSize: number;
+   total: undefined;
+   showSizeChanger: boolean;
+   pageSizeOptions: number[];
+}
+
+// ==================== MODAL ===================
 export interface Update {
    id: number;
    name: string;
@@ -20,17 +35,4 @@ export interface PropsModals {
    update: Update;
 }
 
-///////////////////////// GlobalCategory Table ////////////////////////
-export interface Record extends Update {
-   createdAt: string;
-   image?: any;
-   lastUpdateAt: string;
-}
 
-export interface Pagination {
-   current: number;
-   pageSize: number;
-   total: undefined;
-   showSizeChanger: boolean;
-   pageSizeOptions: number[];
-}

@@ -1,12 +1,13 @@
+import { BrandCategory } from "@modals";
+import { openNotification } from "@utils";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { brands, brandCategory } from "@service";
 import { Button, Tooltip } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { GlobalTable, Popconfirm, GlobalSearch } from "@components";
-import { brands, brandCategory } from "@service";
-import { BrandCategory } from "@modals";
-import { openNotification } from "@utils";
 import { Record, Update, Pagination } from "@types";
+
 const initialValue = {
    id: 0,
    name: "",
@@ -16,23 +17,19 @@ const initialValue = {
 };
 
 const Index = () => {
+   const { search } = useLocation();
+   const navigate = useNavigate();
+   const [total, setTotal] = useState();
    const [open, setOpen] = useState(false);
    const [data, setData] = useState([]);
-   const [total, setTotal] = useState();
-   const [update, setUpdate] = useState<Update>(initialValue);
    const [brandsData, setBrandsData] = useState([]);
    const [params, setParams] = useState({
       search: "",
       limit: 5,
       page: 1,
    });
-   const { search } = useLocation();
-   const navigate = useNavigate();
+   const [update, setUpdate] = useState<Update>(initialValue);
 
-   useEffect(() => {
-      getData();
-      getBrand();
-   }, [params]);
    useEffect(() => {
       const params = new URLSearchParams(search);
       const page = Number(params.get("page")) || 1;
@@ -49,10 +46,11 @@ const Index = () => {
    const openModal = () => {
       setOpen(true);
    };
-   const handleClose = () => {
+   const closeModal = () => {
       setOpen(false);
       setUpdate(initialValue);
    };
+
    const getData = async () => {
       const res = await brandCategory.get(params);
       if (res.status === 200) {
@@ -60,6 +58,11 @@ const Index = () => {
          setTotal(res.data?.data?.count);
       }
    };
+   useEffect(() => {
+      getData();
+      getBrand();
+   }, [params]);
+
    const deleteData = async (id: number) => {
       try {
          const res = await brandCategory.delete(id);
@@ -78,16 +81,21 @@ const Index = () => {
          console.log(error);
       }
    };
-   const editData = (data: Record) => {
-      setUpdate(data);
-      openModal();
-   };
    const getBrand = async () => {
       const res = await brands.get({});
       if (res.status === 200) {
          setBrandsData(res?.data?.data?.brands);
       }
    };
+
+
+   const handleSearch = (value: string) => {
+      setParams((prev) => ({
+         ...prev,
+         search: value,
+      }));
+   };
+
    const handleTableChange = (pagination: Pagination) => {
       const { current, pageSize } = pagination;
       setParams((prev) => ({
@@ -100,18 +108,18 @@ const Index = () => {
       current_params.set("limit", `${pageSize}`);
       navigate(`?${current_params}`);
    };
-   const handleSearch = (value: string) => {
-      setParams((prev) => ({
-         ...prev,
-         search: value,
-      }));
+
+   const editData = (data: Record) => {
+      setUpdate(data);
+      openModal();
    };
+
 
    const columns = [
       {
-         title: "No",
-         dataIndex: "no",
-         key: "no",
+         title: "T/r",
+         dataIndex: "tr",
+         key: "tr",
          render: (_: string, __: Record, index: number) =>
             (params.page - 1) * params.limit + index + 1,
       },
@@ -153,7 +161,7 @@ const Index = () => {
       <>
          <BrandCategory
             open={open}
-            handleClose={handleClose}
+            handleClose={closeModal}
             update={update}
             getData={getData}
             brandsData={brandsData}

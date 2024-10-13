@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Tooltip } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { GlobalTable, Popconfirm, GlobalSearch } from "@components";
+import { GlobalTable, Popconfirm, GlobalSearch } from "@components"; import { useEffect, useState } from "react";
 import { brands, category } from "@service";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Brands } from "@modals";
 import { Record, Update, Pagination } from "@types";
 const initialValue = {
@@ -15,18 +14,18 @@ const initialValue = {
 };
 
 const Index = () => {
-   const { search } = useLocation();
-   const navigate = useNavigate();
    const [open, setOpen] = useState(false);
    const [data, setData] = useState([]);
+   const navigate = useNavigate();
    const [total, setTotal] = useState();
-   const [update, setUpdate] = useState<Update>(initialValue);
    const [categories, setCategories] = useState([]);
+   const [update, setUpdate] = useState<Update>(initialValue);
    const [params, setParams] = useState({
       search: "",
       limit: 5,
       page: 1,
    });
+   const { search } = useLocation();
 
    useEffect(() => {
       const params = new URLSearchParams(search);
@@ -41,13 +40,14 @@ const Index = () => {
       }));
    }, [search]);
 
-   const openModal = () => {
-      setOpen(true);
-   };
-   const handleClose = () => {
+   const closeModal = () => {
       setOpen(false);
       setUpdate(initialValue);
    };
+   const openModal = () => {
+      setOpen(true);
+   };
+
    const getData = async () => {
       const res = await brands.get(params);
       if (res.status === 200) {
@@ -61,6 +61,7 @@ const Index = () => {
       getCategory();
    }, [params]);
 
+
    const deleteData = async (id: number) => {
       try {
          const res = await brands.delete(id);
@@ -73,10 +74,6 @@ const Index = () => {
       }
    };
 
-   const editData = (data: Record) => {
-      setUpdate(data);
-      openModal();
-   };
 
    const getCategory = async () => {
       const response = await category.get({});
@@ -84,6 +81,17 @@ const Index = () => {
          setCategories(response?.data?.data?.categories);
       }
    };
+   const editData = (data: Record) => {
+      setUpdate(data);
+      openModal();
+   };
+   const handleSearch = (value: string) => {
+      setParams((prev) => ({
+         ...prev,
+         search: value,
+      }));
+   };
+
 
    const handleTableChange = (pagination: Pagination) => {
       const { current, pageSize } = pagination;
@@ -97,18 +105,12 @@ const Index = () => {
       current_params.set("limit", `${pageSize}`);
       navigate(`?${current_params}`);
    };
-   const handleSearch = (value: string) => {
-      setParams((prev) => ({
-         ...prev,
-         search: value,
-      }));
-   };
 
    const columns = [
       {
-         title: "No",
-         dataIndex: "no",
-         key: "no",
+         title: "T/r",
+         dataIndex: "tr",
+         key: "tr",
          render: (_: string, __: Record, index: number) =>
             (params.page - 1) * params.limit + index + 1,
       },
@@ -154,27 +156,14 @@ const Index = () => {
 
    return (
       <>
-         <Brands
-            open={open}
-            handleClose={handleClose}
-            update={update}
-            getData={getData}
-            categories={categories}
-         />
+         <Brands open={open} handleClose={closeModal} update={update} getData={getData} categories={categories} />
          <div className="flex justify-between mb-10">
-            <GlobalSearch
-               placeholder="Search Brands..."
-               searchParamKey="search"
-               onSearch={handleSearch}
-            />
-            <Button
-               type="primary"
-               onClick={openModal}
-               className="rounded-lg px-4 py-5"
-            >
+            <GlobalSearch placeholder="Search Brands..." searchParamKey="search" onSearch={handleSearch} />
+            <Button type="primary" onClick={openModal} className="rounded-lg px-4 py-5" >
                <span className="ml-2">Add New Brands</span>
             </Button>
          </div>
+
          <GlobalTable
             columns={columns}
             dataSource={data}

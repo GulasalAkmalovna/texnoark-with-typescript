@@ -5,7 +5,6 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { GlobalTable, Popconfirm, GlobalSearch } from "@components";
 import { subCategory } from "@service";
 import { SubCategory } from "@modals";
-import { openNotification } from "@utils";
 import { Record, Update, Pagination } from "@types";
 const initialValue = {
    id: 0,
@@ -53,10 +52,10 @@ const Index = () => {
       setUpdate(initialValue);
    };
    const getData = async () => {
-      const res = await subCategory.get(Number(id), params);
-      if (res.status === 200) {
-         setData(res.data?.data?.subcategories);
-         setTotal(res.data?.data?.count);
+      const response = await subCategory.get(Number(id), params);
+      if (response.status === 200) {
+         setData(response.data?.data?.subcategories);
+         setTotal(response.data?.data?.count);
       }
    };
    const deleteData = async (id: number) => {
@@ -64,16 +63,8 @@ const Index = () => {
          const res = await subCategory.delete(id);
          if (res.status === 200) {
             getData();
-            openNotification({
-               type: "success",
-               message: "Sub Category deleted successfully",
-            });
          }
       } catch (error) {
-         openNotification({
-            type: "error",
-            message: "Something went wrong",
-         });
          console.log(error);
       }
    };
@@ -102,9 +93,9 @@ const Index = () => {
 
    const columns = [
       {
-         title: "No",
-         dataIndex: "no",
-         key: "no",
+         title: "T/r",
+         dataIndex: "tr",
+         key: "tr",
          render: (_: string, __: Record, index: number) =>
             (params.page - 1) * params.limit + index + 1,
       },
