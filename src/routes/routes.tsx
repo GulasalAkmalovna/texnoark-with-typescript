@@ -1,48 +1,45 @@
-import {
-   AppstoreOutlined,
-   SettingOutlined,
-   StockOutlined,
-   ProductOutlined,
-   TagOutlined,
-   TagsOutlined,
-   AppstoreAddOutlined,
-} from "@ant-design/icons";
+import { FiSettings } from "react-icons/fi";
+import { AiOutlineStock } from "react-icons/ai";
+import { BiSpreadsheet } from "react-icons/bi";
+import { TbBrand4Chan } from "react-icons/tb";
+import { BiCategoryAlt } from "react-icons/bi";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 
 const admin = [
    {
       content: "Products",
       path: "/admin-layout/",
-      icon: <ProductOutlined />,
+      icon: <MdOutlineAdminPanelSettings />
    },
    {
       content: "Category",
       path: "/admin-layout/category",
-      icon: <AppstoreOutlined />,
+      icon: <BiCategoryAlt />,
    },
    {
       content: "Brands",
       path: "/admin-layout/brands",
-      icon: <TagOutlined />,
+      icon: <TbBrand4Chan />,
    },
    {
       content: "Brand category",
       path: "/admin-layout/brand-category",
-      icon: <TagsOutlined />,
+      icon: <TbBrand4Chan />
    },
    {
       content: "Ads",
       path: "/admin-layout/ads",
-      icon: <AppstoreAddOutlined />,
+      icon: <BiSpreadsheet />,
    },
    {
       content: "Stocks",
       path: "/admin-layout/stocks",
-      icon: <StockOutlined />,
+      icon: <AiOutlineStock />,
    },
    {
       content: "Settings",
       path: "/admin-layout/settings",
-      icon: <SettingOutlined />,
+      icon: <FiSettings />,
    },
 ];
 
